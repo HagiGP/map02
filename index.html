@@ -16,13 +16,13 @@
 
         // タイルマップを追加
         L.tileLayer('./tiles/{z}/{x}/{y}.png', {
-            maxZoom: 12,
+            maxZoom: 14,
             minZoom: 11,
             attribution: '© Your Map Provider'
         }).addTo(map);
 
         // 現在地を取得
-        map.locate({ setView: true, maxZoom: 12 });
+        map.locate({ setView: true, maxZoom: 14 });
 
         // 現在地が取得できたとき
         map.on('locationfound', function(e) {
