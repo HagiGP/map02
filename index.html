@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>タイルマップの公開</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; } /* 地図を画面全体に表示 */
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // 地図を初期化
+        var map = L.map('map', { center: [34.5, 131.5], zoom: 11 });
+
+        // タイルマップを追加
+        L.tileLayer('./tiles/{z}/{x}/{y}.png', {
+            maxZoom: 12,
+            minZoom: 11,
+            attribution: '© Your Map Provider'
+        }).addTo(map);
+
+        // 現在地を取得
+        map.locate({ setView: true, maxZoom: 12 });
+
+        // 現在地が取得できたとき
+        map.on('locationfound', function(e) {
+            var radius = e.accuracy / 2;
+
+            // 現在地のマーカー
+            L.marker(e.latlng).addTo(map)
+                .bindPopup("ここが現在地です").openPopup();
+
+            // 現在地の範囲
+            L.circle(e.latlng, radius).addTo(map);
+        });
+
+        // 現在地が取得できなかったとき
+        map.on('locationerror', function() {
+            // 萩・明倫学舎の座標に地図を移動
+            var hagimeirinsya = [34.40808, 131.39039]; // 萩・明倫学舎の座標
+            map.setView(hagimeirinsya, 12);
+
+            // 萩・明倫学舎のマーカー
+            L.marker(hagimeirinsya).addTo(map)
+                .bindPopup("現在地が取得できなかったため、萩・明倫学舎を中心に表示しています。").openPopup();
+        });
+    </script>
+</body>
+</html>
